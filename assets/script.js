@@ -17,7 +17,7 @@ const slides = [
 	}
 ];
 
-function slider(id, _numberOfSlides) {
+function slider(id) {
 	'use strict';
 
 	const arrowLeft = document.querySelector('.arrow_left');
@@ -31,7 +31,16 @@ function slider(id, _numberOfSlides) {
 			<img class="banner-img" src="./assets/images/slideshow/${slides[0].image}" alt="Banner Print-it">
 			<p>${slides[0].tagLine}</p>
 		`);
+		for (let index = 0; index < slides.length; index++) {
+			const dot = document.createElement('div');
+			dot.classList.add('dot');
+			const a = document.createAttribute("data-id");
+			a.value = index;
+			dot.setAttributeNode(a);
+			dotsContainer.appendChild(dot);
+		}
 	}
+	createElements();
 
 	const updateSlider = (index) => {
 		const slide = slides[index];
@@ -40,32 +49,20 @@ function slider(id, _numberOfSlides) {
 		const text = banner.querySelector('p');
 		img.src = `./assets/images/slideshow/${slide.image}`;
 		text.innerHTML = slide.tagLine;
-
 		dots.forEach((dot, i) => {
 			dot.classList.toggle('dot_selected', i === index);
 		});
 	};
 
-	for (let index = 0; index < slides.length; index++) {
-		const dot = document.createElement('div');
-		dot.classList.add('dot');
-		if (index === 0) {
-			dot.classList.add('dot_selected');
-		}
-		dotsContainer.appendChild(dot);
-	}
-
 	const dots = document.querySelectorAll('.dot');
 
-	for (const [index, dot] of Array.from(dots.entries())) {
-		dot.addEventListener('click', (event) => {
-			console.log(`Bullet point cliqué : ${index}`);
-			currentIndex = index;
+	for (let dot of dots) {
+		dot.addEventListener('click', (e) => {
+			console.log(e.target.dataset.id);
+			currentIndex = e.target.dataset.id;
 			updateSlider(currentIndex);
 		});
 	}
-
-	createElements();
 
 	arrowRight.addEventListener('click', () => {
 		console.log('Flèche droite cliquée');
